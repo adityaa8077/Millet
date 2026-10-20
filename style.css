@@ -842,29 +842,31 @@ body {
 .hero-plate-container {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  aspect-ratio: 1;
+  max-width: 460px;
+  min-height: 320px;
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   padding: 12px;
   background: radial-gradient(circle, rgba(243, 196, 105, 0.15) 0%, rgba(20, 27, 24, 0.8) 70%, transparent 100%);
   border: 1px solid var(--border-glow);
   box-shadow: 0 0 60px rgba(243, 196, 105, 0.2), 0 30px 60px rgba(0, 0, 0, 0.8);
   animation: float-gentle 6s ease-in-out infinite;
-}
-
-@keyframes float-gentle {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(1deg); }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-plate-img {
   width: 100%;
   height: 100%;
+  min-height: 280px;
   object-fit: cover;
   border-radius: 50%;
   display: block;
   border: 4px solid #1a221f;
   filter: contrast(1.06) brightness(1.02);
+  background-color: #111614;
 }
 
 .orbit-badge {

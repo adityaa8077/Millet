@@ -1,6 +1,6 @@
 # 🌾 Millet Marg — 3D Interactive Web Experience
 
-> **The Golden Path from Conventional Wheat to Ancient Supergrain Dining**  
+> **The Modern Path from Conventional Wheat to Ancient Supergrain Dining**  
 > An immersive WebGL 3D gastronomic journey showcasing the health, ecological, and culinary revolution of replacing industrial wheat with fire-forged ancient millets.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone)
