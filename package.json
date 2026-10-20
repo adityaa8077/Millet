@@ -1,0 +1,16 @@
+{
+  "name": "millet-marg",
+  "version": "1.0.0",
+  "description": "3D Interactive Culinary Experience - From Wheat to Ancient Millets",
+  "scripts": {
+    "start": "serve . -p 3000",
+    "dev": "serve . -p 3000",
+    "build": "echo 'Static build ready'"
+  },
+  "keywords": ["millet", "3d", "threejs", "gastronomy", "shree-anna", "wheat-to-millet"],
+  "author": "Millet Marg",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

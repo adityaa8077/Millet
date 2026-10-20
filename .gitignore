@@ -1,0 +1,7 @@
+node_modules
+.vercel
+asset_previews
+*.log
+.DS_Store
+Thumbs.db
+WhatsApp*

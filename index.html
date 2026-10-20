@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Millet Marg | 3D Interactive Culinary Experience — The Wheat to Supergrain Journey</title>
+  <meta name="description" content="Discover Millet Marg: The revolutionary 3D gastronomic journey showing how conventional wheat is elevated into ancient, nutrient-dense, fire-crafted millets.">
+  <meta name="keywords" content="Millet Marg, millets from wheat, ancient grains, 3D food experience, Shree Anna, foxtail millet, ragi, bajra, culinary journey">
+  <meta property="og:title" content="Millet Marg | 3D Interactive Culinary Journey">
+  <meta property="og:description" content="Explore how traditional wheat is transformed into ancient, gluten-free millet culinary wonders with live 3D grain models and kitchen firecraft.">
+  <meta property="og:image" content="assets/hero-millet-bowl.jpg">
+  <meta name="theme-color" content="#0a0d0c">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f3c469'><path d='M12 2L15 8H9L12 2zM12 22L9 16H15L12 22zM2 12L8 9V15L2 12zM22 12L16 15V9L22 12z'/></svg>">
+
+  <!-- External Libraries & Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Three.js r128 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Background WebGL 3D Canvas -->
+  <div id="webgl-canvas-container" aria-hidden="true"></div>
+
+  <!-- Ambient Lighting Orbs -->
+  <div class="ambient-glow-1" aria-hidden="true"></div>
+  <div class="ambient-glow-2" aria-hidden="true"></div>
+
+  <!-- Main Application Wrapper -->
+  <div class="app-container">
+
+    <!-- ======================================================================
+         Netflix-Style Global Navbar
+         ====================================================================== -->
+    <header class="netflix-header">
+      <nav class="netflix-navbar" id="main-navbar">
+        <!-- Left: Brand Logo & Primary Links -->
+        <div class="nav-left">
+          <a href="#hero" class="netflix-brand" aria-label="Millet Marg Home">
+            <span class="brand-flame-icon"><i data-lucide="flame"></i></span>
+            <span class="brand-text">MILLET MARG</span>
+          </a>
+
+          <!-- Desktop Primary Nav Links -->
+          <ul class="nav-primary-links">
+            <li><a href="#hero" class="netflix-link active">Home</a></li>
+            <li><a href="#inspector" class="netflix-link">3D Grain Lab</a></li>
+            <li><a href="#journey" class="netflix-link">The Marg</a></li>
+            <li><a href="#reel" class="netflix-link">Flame Reel</a></li>
+            <li><a href="#nutrition" class="netflix-link">Wheat vs Millet</a></li>
+            <li><a href="#menu" class="netflix-link">Signature Menu</a></li>
+          </ul>
+        </div>
+
+        <!-- Right: Search, Sound, Notification, Profile & Order CTA -->
+        <div class="nav-right">
+          <!-- Interactive Search Trigger -->
+          <div class="nav-search-wrap">
+            <button class="nav-icon-btn" id="search-btn" title="Search Dishes & Grains" aria-label="Search">
+              <i data-lucide="search"></i>
+            </button>
+            <input type="text" id="nav-search-input" class="nav-search-input" placeholder="Search grains, dishes...">
+          </div>
+
+          <!-- Ambient Audio Ambiance -->
+          <button id="sound-toggle" class="nav-icon-btn" title="Toggle Kitchen Flame Audio" aria-label="Toggle Sound">
+            <i data-lucide="volume-x"></i>
+          </button>
+
+          <!-- Notification Bell -->
+          <div class="nav-notification-wrap">
+            <button class="nav-icon-btn" id="notif-btn" title="Notifications" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="notif-badge">3</span>
+            </button>
+            <!-- Dropdown Menu -->
+            <div class="notif-dropdown" id="notif-dropdown">
+              <div class="notif-header">
+                <span>Recent Updates</span>
+                <span class="notif-tag">Shree Anna</span>
+              </div>
+              <div class="notif-list">
+                <a href="#reel" class="notif-item">
+                  <div class="notif-icon"><i data-lucide="flame"></i></div>
+                  <div class="notif-text">
+                    <strong>New Wok Flambé Footage</strong>
+                    <small>Watch live high heat flame cooking</small>
+                  </div>
+                </a>
+                <a href="#inspector" class="notif-item">
+                  <div class="notif-icon"><i data-lucide="orbit"></i></div>
+                  <div class="notif-text">
+                    <strong>3D Grain Inspector Updated</strong>
+                    <small>Inspect foxtail & ragi cellular models</small>
+                  </div>
+                </a>
+                <a href="#menu" class="notif-item">
+                  <div class="notif-icon"><i data-lucide="utensils"></i></div>
+                  <div class="notif-text">
+                    <strong>Royal Millet Marg Bowl</strong>
+                    <small>Now serving with spiced chana gravy</small>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile / Member Avatar -->
+          <div class="nav-profile-wrap">
+            <button class="profile-avatar-btn" id="profile-btn" aria-label="User Profile">
+              <img src="assets/hero-millet-bowl.jpg" alt="Chef Avatar" class="profile-img">
+              <i data-lucide="chevron-down" class="profile-chevron"></i>
+            </button>
+            <div class="profile-dropdown" id="profile-dropdown">
+              <div class="profile-dropdown-user">
+                <div class="profile-name">Gourmet Explorer</div>
+                <div class="profile-plan">Shree Anna Club • Member</div>
+              </div>
+              <ul class="profile-links">
+                <li><a href="#menu"><i data-lucide="shopping-bag"></i> My Orders (<span id="profile-cart-count">0</span>)</a></li>
+                <li><a href="#nutrition"><i data-lucide="heart-pulse"></i> Dietary Health Goals</a></li>
+                <li><a href="#inspector"><i data-lucide="sparkles"></i> Millets Guidebook</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Netflix-Style Order CTA -->
+          <a href="#menu" class="netflix-cta-btn" id="nav-order-btn">
+            <span>Order Experience</span>
+            <span id="cart-badge" class="cart-pill">0</span>
+          </a>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button class="mobile-hamburger-btn" id="mobile-menu-toggle" aria-label="Toggle Mobile Menu">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Netflix-Style Slide-Out Mobile Navigation Drawer -->
+      <div class="mobile-drawer" id="mobile-drawer">
+        <div class="mobile-drawer-header">
+          <div class="mobile-user-card">
+            <img src="assets/hero-millet-bowl.jpg" alt="Avatar" class="mobile-avatar">
+            <div>
+              <div style="font-weight:700; color:#fff; font-size:1rem;">Millet Marg</div>
+              <div style="color:var(--gold-primary); font-size:0.75rem; font-weight:600;">Ancient Supergrain Gastronomy</div>
+            </div>
+          </div>
+          <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close Menu">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <ul class="mobile-nav-list">
+          <li>
+            <a href="#hero" class="mobile-nav-item active">
+              <i data-lucide="home"></i>
+              <span>Home Showcase</span>
+            </a>
+          </li>
+          <li>
+            <a href="#inspector" class="mobile-nav-item">
+              <i data-lucide="orbit"></i>
+              <span>3D Grain Inspector</span>
+            </a>
+          </li>
+          <li>
+            <a href="#journey" class="mobile-nav-item">
+              <i data-lucide="git-branch"></i>
+              <span>The Marg (Wheat to Millet)</span>
+            </a>
+          </li>
+          <li>
+            <a href="#reel" class="mobile-nav-item">
+              <i data-lucide="flame"></i>
+              <span>Live Flame Video Reel</span>
+            </a>
+          </li>
+          <li>
+            <a href="#nutrition" class="mobile-nav-item">
+              <i data-lucide="activity"></i>
+              <span>Wheat vs Millet Lab</span>
+            </a>
+          </li>
+          <li>
+            <a href="#menu" class="mobile-nav-item">
+              <i data-lucide="utensils-crossed"></i>
+              <span>Chef's Signature Menu</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="mobile-drawer-footer">
+          <a href="#menu" class="btn-primary" style="width:100%; justify-content:center;">
+            <i data-lucide="shopping-bag"></i>
+            <span>Order Fresh Bowls</span>
+          </a>
+          <div style="margin-top:1rem; font-size:0.75rem; color:var(--text-dim); text-align:center;">
+            100% Gluten-Free • Farm to Flame
+          </div>
+        </div>
+      </div>
+      <div class="mobile-drawer-backdrop" id="drawer-backdrop"></div>
+    </header>
+
+    <!-- ======================================================================
+         Hero Section
+         ====================================================================== -->
+    <section class="hero-section" id="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            <span>The Ancient Grain Awakening • 100% Gluten-Free</span>
+          </div>
+
+          <h1 class="hero-title">
+            The Golden Path <br>
+            <span class="cinzel-sub text-gradient-gold">MILLET MARG</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            From the high-gluten monoculture of conventional wheat to the vibrant, fire-tossed alchemy of ancient millets. Discover <strong>The Marg</strong>—the path to metabolic vitality, drought-resilient farming, and extraordinary gourmet dining.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#inspector" class="btn-primary">
+              <i data-lucide="orbit"></i>
+              <span>Inspect 3D Grains</span>
+            </a>
+            <a href="#reel" class="btn-secondary">
+              <i data-lucide="play-circle"></i>
+              <span>Watch Flame Kitchen</span>
+            </a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num">70%</span>
+              <span class="stat-label">Lower Glycemic Index</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">10x</span>
+              <span class="stat-label">More Bioavailable Calcium</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">0%</span>
+              <span class="stat-label">Gluten & Inflammation</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">1/4th</span>
+              <span class="stat-label">Water Footprint of Wheat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual-card">
+          <div class="hero-plate-container">
+            <img src="assets/hero-millet-bowl.jpg" alt="Millet Marg Signature Bowl of Foxtail Millet Upma with Chana Masala" class="hero-plate-img">
+            
+            <div class="orbit-badge top-right">
+              <i data-lucide="sparkle"></i>
+              <span>Foxtail & Little Millet</span>
+            </div>
+
+            <div class="orbit-badge bottom-left">
+              <i data-lucide="flame"></i>
+              <span>Wok Flambé Seared</span>
+            </div>
+
+            <div class="orbit-badge bottom-right">
+              <i data-lucide="shield-check"></i>
+              <span>Wheat-Free Mastery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-canvas-hint">
+        <i data-lucide="mouse-pointer-click"></i>
+        <span>Explore the 3D world below • Drag to rotate models</span>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Section 1: 3D Grain Inspector (Wheat vs Ancient Millets)
+         ====================================================================== -->
+    <section id="inspector">
+      <div class="section-header">
+        <span class="section-tag">Interactive WebGL Lab</span>
+        <h2 class="section-title">The 3D Anatomy of Grains</h2>
+        <p class="section-desc">
+          Compare the cellular structure, botanical heritage, and metabolic impact of industrial wheat against nature's resilient ancient millets in real-time 3D.
+        </p>
+      </div>
+
+      <div class="inspector-card">
+        <div class="grain-viewport">
+          <canvas id="grain-3d-canvas"></canvas>
+          <div class="viewport-overlay">
+            <span class="viewport-badge">MODEL: PROCEDURAL 3D GRAIN</span>
+            <span class="viewport-badge" id="grain-badge-status">Conventional Baseline</span>
+          </div>
+          <div class="viewport-controls-hint">
+            <i data-lucide="rotate-3d"></i>
+            <span>Touch or Drag to Rotate 360°</span>
+          </div>
+        </div>
+
+        <div class="grain-details-panel">
+          <!-- Selector Tabs -->
+          <div class="grain-selectors">
+            <button class="grain-tab-btn wheat-tab active" data-grain="wheat" onclick="selectGrain('wheat')">
+              Wheat (Baseline)
+            </button>
+            <button class="grain-tab-btn" data-grain="foxtail" onclick="selectGrain('foxtail')">
+              Foxtail (Kangni)
+            </button>
+            <button class="grain-tab-btn" data-grain="bajra" onclick="selectGrain('bajra')">
+              Pearl (Bajra)
+            </button>
+            <button class="grain-tab-btn" data-grain="ragi" onclick="selectGrain('ragi')">
+              Finger (Ragi)
+            </button>
+            <button class="grain-tab-btn" data-grain="little" onclick="selectGrain('little')">
+              Little (Samai)
+            </button>
+          </div>
+
+          <h3 class="grain-info-title" id="grain-name">Conventional Wheat</h3>
+          <div class="grain-botanical-name" id="grain-botanical">Triticum aestivum</div>
+          <p class="grain-description" id="grain-desc">
+            The modern agricultural staple. While versatile, excessive consumption of polished wheat flour (Maida/Atta) spikes blood glucose rapidly, stresses insulin production, and contains dense gluten polymers that trigger digestive inflammation.
+          </p>
+
+          <div class="metric-grid">
+            <div class="metric-row">
+              <div class="metric-header">
+                <span class="metric-name"><i data-lucide="activity"></i> Glycemic Index (GI)</span>
+                <span class="metric-val" id="metric-gi-val">74 (High)</span>
+              </div>
+              <div class="metric-bar-bg">
+                <div class="metric-bar-fill" id="metric-gi" style="width: 74%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-header">
+                <span class="metric-name"><i data-lucide="feather"></i> Dietary Fiber</span>
+                <span class="metric-val" id="metric-fiber-val">2.7g / 100g</span>
+              </div>
+              <div class="metric-bar-bg">
+                <div class="metric-bar-fill" id="metric-fiber" style="width: 20%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-header">
+                <span class="metric-name"><i data-lucide="zap"></i> Protein Content</span>
+                <span class="metric-val" id="metric-protein-val">11.8g / 100g</span>
+              </div>
+              <div class="metric-bar-bg">
+                <div class="metric-bar-fill" id="metric-protein" style="width: 78%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-header">
+                <span class="metric-name"><i data-lucide="bone"></i> Bioavailable Calcium</span>
+                <span class="metric-val" id="metric-calcium-val">34mg / 100g</span>
+              </div>
+              <div class="metric-bar-bg">
+                <div class="metric-bar-fill" id="metric-calcium" style="width: 10%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Section 2: The Marg (Wheat to Millet Transformation Pipeline)
+         ====================================================================== -->
+    <section id="journey">
+      <div class="section-header">
+        <span class="section-tag">The 4-Stage Evolution</span>
+        <h2 class="section-title">From Wheat to Millet Marg</h2>
+        <p class="section-desc">
+          Follow the transformation of everyday dining: how we replace industrially processed wheat with fire-forged, whole ancient millets.
+        </p>
+      </div>
+
+      <div class="timeline-stages">
+        <!-- Stage 1 -->
+        <div class="stage-card">
+          <div class="stage-badge-center">01</div>
+          <div class="stage-content">
+            <div class="stage-step-tag">Phase 1 • Ecological & Seed Heritage</div>
+            <h3 class="stage-title">Breaking Wheat Dependency</h3>
+            <p class="stage-text">
+              While conventional wheat cultivation demands 1,800+ liters of water per kilogram and heavy synthetic fertilizers that deplete topsoil, millets are climate-smart C4 crops that flourish in drought soil with minimal rainwater.
+            </p>
+            <ul class="stage-feature-list">
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Zero pesticide dependency; naturally pest and disease-resistant.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Deep root systems that regenerate organic soil nitrogen.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Supports smallholder rain-fed farmers across the Deccan plateau.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="stage-media-box">
+            <video autoplay muted loop playsinline poster="assets/hero-millet-bowl.jpg">
+              <source src="assets/video-wok-toss.mp4" type="video/mp4">
+            </video>
+            <div class="stage-media-overlay">
+              <div class="media-caption">Phase 1: Pure Grain Selection & Toasticity</div>
+              <button class="media-action-btn" onclick="openVideoModal('flambe-2')" title="Enlarge Video">
+                <i data-lucide="maximize-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="stage-card">
+          <div class="stage-badge-center">02</div>
+          <div class="stage-content">
+            <div class="stage-step-tag">Phase 2 • Milling & De-Husking</div>
+            <h3 class="stage-title">Stone-Ground, Unbleached Purity</h3>
+            <p class="stage-text">
+              Commercial wheat processing strips the nutritious aleurone layer and wheat germ, leaving empty starchy endosperm (Maida). Millet Marg employs cold mechanical de-husking that leaves 100% of the fiber-dense bran intact.
+            </p>
+            <ul class="stage-feature-list">
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>No chemical bleaching agents or benzoyl peroxide.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Retains slow-release resistant starch and polyphenols.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Naturally gluten-free grain pearls ready for high-temperature cooking.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="stage-media-box">
+            <video autoplay muted loop playsinline poster="assets/hero-millet-bowl.jpg">
+              <source src="assets/video-tadka.mp4" type="video/mp4">
+            </video>
+            <div class="stage-media-overlay">
+              <div class="media-caption">Phase 2: Live Tadka Tempering with Mustard & Green Chili</div>
+              <button class="media-action-btn" onclick="openVideoModal('tadka')" title="Enlarge Video">
+                <i data-lucide="maximize-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="stage-card">
+          <div class="stage-badge-center">03</div>
+          <div class="stage-content">
+            <div class="stage-step-tag">Phase 3 • Fire Craft & Kitchen Alchemy</div>
+            <h3 class="stage-title">High Flame Wok Flambé</h3>
+            <p class="stage-text">
+              Wheat semolina and pasta get gluey under high heat. In contrast, whole foxtail and pearl millets thrive under our chef's open wok flame—absorbing smoky charred aromatics, infusing mustard seeds, and blooming into tender, distinct pearls.
+            </p>
+            <ul class="stage-feature-list">
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Flash-flaming seals natural antioxidants inside each grain.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Infused with cold-pressed mustard oil and fresh aromatic curry leaves.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Paired with rich, slow-simmered protein-packed chickpea gravy.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="stage-media-box">
+            <video autoplay muted loop playsinline poster="assets/hero-millet-bowl.jpg">
+              <source src="assets/video-flambe-1.mp4" type="video/mp4">
+            </video>
+            <div class="stage-media-overlay">
+              <div class="media-caption">Phase 3: Live Flame Flambé Wok Searing</div>
+              <button class="media-action-btn" onclick="openVideoModal('flambe-1')" title="Enlarge Video">
+                <i data-lucide="maximize-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="stage-card">
+          <div class="stage-badge-center">04</div>
+          <div class="stage-content">
+            <div class="stage-step-tag">Phase 4 • The Gourmet Result</div>
+            <h3 class="stage-title">The Signature Millet Marg Bowl</h3>
+            <p class="stage-text">
+              The grand finale: A harmonic duality in a matte black ceramic bowl. On one side, freshly ladled aromatic millet upma; on the other, spiced slow-cooked chana masala garnished with torn coriander. 100% wholesome, satisfying, and energizing for hours.
+            </p>
+            <ul class="stage-feature-list">
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Zero afternoon sluggishness or glucose crashes.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Abundant prebiotics nourishing healthy intestinal flora.</span>
+              </li>
+              <li class="stage-feature-item">
+                <i data-lucide="check-circle-2"></i>
+                <span>Unrivaled rich mouthfeel and nutty depth of flavor.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="stage-media-box">
+            <video autoplay muted loop playsinline poster="assets/hero-millet-bowl.jpg">
+              <source src="assets/video-plating.mp4" type="video/mp4">
+            </video>
+            <div class="stage-media-overlay">
+              <div class="media-caption">Phase 4: Chef Ladling Fresh Millet Upma with Curry</div>
+              <button class="media-action-btn" onclick="openVideoModal('plating')" title="Enlarge Video">
+                <i data-lucide="maximize-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Section 3: Kitchen Video Reel (Real Kitchen Footage)
+         ====================================================================== -->
+    <div class="reel-section-wrap">
+      <section id="reel">
+        <div class="section-header">
+          <span class="section-tag">Authentic Kitchen Reel</span>
+          <h2 class="section-title">The Flames of Millet Marg</h2>
+          <p class="section-desc">
+            Direct from our live kitchen line: hover or tap any video to witness real artisanal wok-cooking, flaming splutters, and the art of millet plating.
+          </p>
+        </div>
+
+        <div class="video-reel-grid">
+          <!-- Card 1 -->
+          <div class="video-reel-card" onclick="openVideoModal('flambe-1')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-flambe-1.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Wok Technique</span>
+              <h4 class="reel-card-title">High Flame Wok Flambé</h4>
+              <p class="reel-card-desc">Searing aromatics and grains at blazing heat to caramelize flavors without degrading natural grain nutrients.</p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="video-reel-card" onclick="openVideoModal('plating')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-plating.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Plating Masterclass</span>
+              <h4 class="reel-card-title">Artisanal Bowl Presentation</h4>
+              <p class="reel-card-desc">Ladle service of steaming hot foxtail upma alongside bubbling savory chickpea masala in our signature black bowl.</p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="video-reel-card" onclick="openVideoModal('tadka')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-tadka.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Tempering Spices</span>
+              <h4 class="reel-card-title">Chhonk & Tadka Splutter</h4>
+              <p class="reel-card-desc">Cumin, mustard, and green chilies crackling in hot pan, releasing bioactive polyphenols and pungent aromas.</p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="video-reel-card" onclick="openVideoModal('curry')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-curry-simmer.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Gravy Craft</span>
+              <h4 class="reel-card-title">Slow-Simmered Chana Gravy</h4>
+              <p class="reel-card-desc">Simmering tomato, onion, and roasted masala stew that provides clean vegetarian protein to balance millet carbs.</p>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="video-reel-card" onclick="openVideoModal('flambe-2')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-flambe-2.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Fire Toss</span>
+              <h4 class="reel-card-title">Wok Toss & Flame Sealing</h4>
+              <p class="reel-card-desc">Aerating grain pearls over high heat so each grain remains separate, tender, and non-sticky.</p>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="video-reel-card" onclick="openVideoModal('spices')">
+            <div class="reel-video-container">
+              <video muted loop playsinline preload="metadata">
+                <source src="assets/video-spices.mp4" type="video/mp4">
+              </video>
+              <div class="reel-play-overlay">
+                <div class="play-circle"><i data-lucide="play"></i></div>
+              </div>
+            </div>
+            <div class="reel-card-info">
+              <span class="reel-badge">Spice Alchemy</span>
+              <h4 class="reel-card-title">Whole Spice Hand-Ground Infusion</h4>
+              <p class="reel-card-desc">Direct pan infusion of roasted spices, fresh turmeric, and garden herbs for optimal digestion.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======================================================================
+         Section 4: Wheat vs Millet Substitution Lab
+         ====================================================================== -->
+    <section id="nutrition">
+      <div class="section-header">
+        <span class="section-tag">Metabolic Simulator</span>
+        <h2 class="section-title">Upgrade Your Daily Grain</h2>
+        <p class="section-desc">
+          Click any traditional wheat dish below to see how substituting it with Millet Marg transforms your blood sugar curves, digestion, and daily energy.
+        </p>
+      </div>
+
+      <div class="nutrition-matrix-wrap">
+        <div class="substitute-selector">
+          <div class="swap-box active" data-swap="roti" onclick="selectSubstitution('roti')">
+            <div class="swap-left">
+              <span class="swap-old">Wheat Phulka / Roti</span>
+              <span class="swap-new">Jowar & Bajra Flame Rotla</span>
+            </div>
+            <div class="swap-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+
+          <div class="swap-box" data-swap="upma" onclick="selectSubstitution('upma')">
+            <div class="swap-left">
+              <span class="swap-old">Wheat Suji / Rava Upma</span>
+              <span class="swap-new">Millet Marg Golden Upma</span>
+            </div>
+            <div class="swap-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+
+          <div class="swap-box" data-swap="dalia" onclick="selectSubstitution('dalia')">
+            <div class="swap-left">
+              <span class="swap-old">Wheat Broken Dalia</span>
+              <span class="swap-new">Spiced Foxtail & Mung Khichdi</span>
+            </div>
+            <div class="swap-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+
+          <div class="swap-box" data-swap="pasta" onclick="selectSubstitution('pasta')">
+            <div class="swap-left">
+              <span class="swap-old">Maida Wheat Noodles</span>
+              <span class="swap-new">100% Ragi & Foxtail Wok Noodles</span>
+            </div>
+            <div class="swap-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+
+          <div style="margin-top: 1rem; padding: 1.25rem; border-radius: 12px; background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.2);">
+            <div style="font-size: 0.82rem; text-transform: uppercase; color: #34d399; font-weight: 700; margin-bottom: 0.35rem;">
+              <i data-lucide="leaf"></i> Environmental Conservation
+            </div>
+            <p style="font-size: 0.88rem; color: #cbd5e1; margin: 0;">
+              Every meal switched from wheat to millets saves approximately <strong id="sub-water" style="color:#f3c469;">1,400 L/kg</strong> of groundwater and eliminates 80g of synthetic chemical runoff.
+            </p>
+          </div>
+        </div>
+
+        <div class="nutrition-gauges">
+          <div>
+            <h4 id="sub-title" style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.5rem; color: #fde68a;">
+              Wheat Phulka ➔ Jowar & Bajra Flame Rotla
+            </h4>
+            <p id="sub-desc" style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 2rem;">
+              Replaces high-gluten refined wheat with slow-digesting pearl millet, curbing post-meal lethargy and bloated digestion.
+            </p>
+          </div>
+
+          <!-- Glycemic Index Gauge -->
+          <div class="gauge-item">
+            <div class="gauge-labels">
+              <span>Glycemic Load Comparison (Lower is Better)</span>
+              <div class="gauge-compare">
+                <span class="wheat-tag" id="gauge-wheat-gi-val">Wheat GI: 75</span>
+                <span class="millet-tag" id="gauge-millet-gi-val">Millet GI: 52</span>
+              </div>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-fill" id="gauge-gi-fill" style="width: 68%;"></div>
+            </div>
+          </div>
+
+          <!-- Fiber Density Gauge -->
+          <div class="gauge-item">
+            <div class="gauge-labels">
+              <span>Dietary Fiber Multiplier</span>
+              <div class="gauge-compare">
+                <span class="wheat-tag" id="gauge-wheat-fiber-val">Wheat Fiber: 2.5g</span>
+                <span class="millet-tag" id="gauge-millet-fiber-val">Millet Fiber: 10.5g</span>
+              </div>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-fill" id="gauge-fiber-fill" style="width: 82%;"></div>
+            </div>
+          </div>
+
+          <!-- Satiety Score -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.75rem; border-radius: 12px; background: rgba(243, 196, 105, 0.1); border: 1px solid var(--border-glow);">
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+              <i data-lucide="clock" style="color: var(--gold-primary);"></i>
+              <span style="font-weight: 600; font-size: 0.95rem;">Extended Satiety Window:</span>
+            </div>
+            <span id="sub-satiety" style="font-weight: 800; font-size: 1.15rem; color: var(--gold-light); font-family: 'Cinzel', serif;">+3.5 Hours Energy</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Section 5: Signature Gourmet Menu
+         ====================================================================== -->
+    <section id="menu">
+      <div class="section-header">
+        <span class="section-tag">Fire-Crafted Gastronomy</span>
+        <h2 class="section-title">The Millet Marg Offerings</h2>
+        <p class="section-desc">
+          Prepared live in our open-fire kitchen. 100% whole grain ancient millets crafted with pure ingredients, cold-pressed oils, and farm-fresh aromatics.
+        </p>
+      </div>
+
+      <div class="menu-grid">
+        <!-- Item 1 -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="assets/hero-millet-bowl.jpg" alt="The Royal Millet Marg Bowl">
+            <span class="menu-grain-badge">Foxtail & Little Millet</span>
+          </div>
+          <h4 class="menu-title">The Royal Millet Marg Bowl</h4>
+          <p class="menu-desc">
+            Our flagship dish! Steamed organic foxtail millet tempered with mustard seeds and curry leaves, served beside slow-braised chickpea curry and herbs.
+          </p>
+          <div class="menu-footer">
+            <div class="menu-price">₹280</div>
+            <button class="menu-order-btn" onclick="addToCart('Royal Millet Marg Bowl', 280)">
+              <i data-lucide="plus"></i> Add Bowl
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=700&q=80" alt="Crisp Ragi Fire Dosa">
+            <span class="menu-grain-badge">Finger Millet (Ragi)</span>
+          </div>
+          <h4 class="menu-title">Crisp Ragi Fire Crepe</h4>
+          <p class="menu-desc">
+            Fermented ragi and black lentil crepe tossed on iron tawa, infused with roasted flaxseed podi and served with cold-pressed coconut chutney.
+          </p>
+          <div class="menu-footer">
+            <div class="menu-price">₹220</div>
+            <button class="menu-order-btn" onclick="addToCart('Crisp Ragi Fire Crepe', 220)">
+              <i data-lucide="plus"></i> Add Bowl
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=700&q=80" alt="Smoky Bajra Khichdi">
+            <span class="menu-grain-badge">Pearl Millet (Bajra)</span>
+          </div>
+          <h4 class="menu-title">Smoky Bajra Herb Khichdi</h4>
+          <p class="menu-desc">
+            Slow-cooked broken pearl millet and yellow split mung, finished with cultured A2 cow ghee, crushed cumin, and roasted garlic chips.
+          </p>
+          <div class="menu-footer">
+            <div class="menu-price">₹250</div>
+            <button class="menu-order-btn" onclick="addToCart('Smoky Bajra Herb Khichdi', 250)">
+              <i data-lucide="plus"></i> Add Bowl
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=80" alt="Jowar Harvest Tostada">
+            <span class="menu-grain-badge">Sorghum (Jowar)</span>
+          </div>
+          <h4 class="menu-title">Flame Jowar Crisp Bowl</h4>
+          <p class="menu-desc">
+            Toasted sorghum grain flakes, sprouted green gram, roasted peanuts, pomegranate rubies, and tangy amchur tamarind vinaigrette.
+          </p>
+          <div class="menu-footer">
+            <div class="menu-price">₹190</div>
+            <button class="menu-order-btn" onclick="addToCart('Flame Jowar Crisp Bowl', 190)">
+              <i data-lucide="plus"></i> Add Bowl
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         Footer
+         ====================================================================== -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#hero" class="netflix-brand">
+            <span class="brand-flame-icon"><i data-lucide="flame"></i></span>
+            <span class="brand-text">MILLET MARG</span>
+          </a>
+          <p>
+            Championing India's ancient supergrains (Shree Anna). Transforming traditional wheat diets through regenerative agriculture, live flame culinary mastery, and uncompromised wellness.
+          </p>
+          <div style="display:flex; gap:0.8rem;">
+            <a href="#" style="color:var(--gold-primary); font-size:1.2rem;"><i data-lucide="instagram"></i></a>
+            <a href="#" style="color:var(--gold-primary); font-size:1.2rem;"><i data-lucide="youtube"></i></a>
+            <a href="#" style="color:var(--gold-primary); font-size:1.2rem;"><i data-lucide="twitter"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="footer-title">Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="#inspector">3D Grain Inspector</a></li>
+            <li><a href="#journey">The Wheat-to-Millet Marg</a></li>
+            <li><a href="#reel">Kitchen Video Reel</a></li>
+            <li><a href="#nutrition">Nutrition Laboratory</a></li>
+            <li><a href="#menu">Chef's Menu</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 class="footer-title">The Millets</h5>
+          <ul class="footer-links">
+            <li><a href="#inspector">Foxtail Millet (Kangni)</a></li>
+            <li><a href="#inspector">Pearl Millet (Bajra)</a></li>
+            <li><a href="#inspector">Finger Millet (Ragi)</a></li>
+            <li><a href="#inspector">Little Millet (Samai)</a></li>
+            <li><a href="#inspector">Sorghum (Jowar)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h5 class="footer-title">Visit Millet Marg</h5>
+          <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.7; margin-bottom:1rem;">
+            Experience the live wok flame and authentic gourmet millet bowls in person or order to your doorstep.
+          </p>
+          <div style="display:flex; gap:0.6rem;">
+            <input type="email" placeholder="Enter your email" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-subtle); border-radius:var(--radius-full); padding:0.6rem 1rem; color:#fff; font-size:0.85rem; width:100%;">
+            <button class="btn-primary" style="padding:0.6rem 1rem;" onclick="showToast('Thank you for subscribing to Millet Marg updates!')">Join</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Millet Marg. Dedicated to the Global Millet Renaissance & Healthy Planetary Living.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================================
+       Cinema Video Modal
+       ====================================================================== -->
+  <div id="video-modal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Modal">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="modal-video-wrap">
+        <video id="modal-video-player" controls playsinline></video>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--gold-primary); font-weight:700; margin-bottom:0.4rem;">
+          Live Kitchen Cinema
+        </div>
+        <h3 id="modal-video-title" style="font-size:1.6rem; font-weight:700; margin-bottom:0.75rem; color:#fff;">
+          Video Title
+        </h3>
+        <p id="modal-video-note" style="color:var(--text-muted); font-size:0.95rem; line-height:1.7;">
+          Chef's culinary breakdown.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notice" class="toast-notice" role="alert">
+    <i data-lucide="check-circle-2" style="color: var(--gold-primary);"></i>
+    <span id="toast-msg">Notification Message</span>
+  </div>
+
+  <!-- Main JavaScript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
